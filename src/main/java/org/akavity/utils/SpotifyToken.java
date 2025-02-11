@@ -2,6 +2,7 @@ package org.akavity.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import io.restassured.http.Header;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,14 +13,18 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class SpotifyToken {
-    public String accessToken = "";
-    public String expiresIn = "";
+    private String accessToken = "";
+    private String expiresIn = "";
 
-    public void get() throws IOException {
-        URL url = new URL(Endpoints.TOKEN);
-        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+    public SpotifyToken() {
+        get();
+    }
 
+    private void get() {
+        HttpURLConnection http = null;
         try {
+            URL url = new URL(Endpoints.TOKEN);
+            http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("POST");
             http.setDoOutput(true);
             http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -47,11 +52,28 @@ public class SpotifyToken {
 
                 // Разбираем JSON
                 JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
-                this.accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();
-                this.expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
+                accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();
+                expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
             }
+        } catch (IOException e) {
+            System.err.println("Ошибка при выполнении HTTP-запроса: " + e.getMessage());
+            //e.printStackTrace(); // Можно убрать в продакшене или заменить на логгер
         } finally {
-            http.disconnect();
+            if (http != null) {
+                http.disconnect();
+            }
         }
+    }
+
+    public Header getAccessTokenHeader() {
+        return new Header("Authorization", "Bearer " + getAccessToken());
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getExpiresIn() {
+        return expiresIn;
     }
 }
