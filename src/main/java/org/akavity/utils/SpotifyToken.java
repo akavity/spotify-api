@@ -18,28 +18,40 @@ public class SpotifyToken {
     public void get() throws IOException {
         URL url = new URL(Endpoints.TOKEN);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
-        http.setRequestMethod("POST");
-        http.setDoOutput(true);
-        http.setRequestProperty("content-type", "application/x-www-form-urlencoded");
 
-        String data = "grant_type=client_credentials&client_id=" + Endpoints.CLIENT_ID + "&client_secret=" + Endpoints.CLIENT_SECRET + "";
+        try {
+            http.setRequestMethod("POST");
+            http.setDoOutput(true);
+            http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-        byte[] out = data.getBytes(StandardCharsets.UTF_8);
+            String data = "grant_type=client_credentials&client_id=" + Endpoints.CLIENT_ID + "&client_secret=" + Endpoints.CLIENT_SECRET;
+            byte[] out = data.getBytes(StandardCharsets.UTF_8);
 
-        OutputStream stream = http.getOutputStream();
-        stream.write(out);
+            try (OutputStream stream = http.getOutputStream()) {
+                stream.write(out);
+            }
 
-        BufferedReader Lines = new BufferedReader(new InputStreamReader(http.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String currentLine;
-        while ((currentLine = Lines.readLine()) != null) {
-            response.append(currentLine);
+            // Проверяем HTTP-код ответа
+            int statusCode = http.getResponseCode();
+            if (statusCode != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("Ошибка HTTP-запроса: " + statusCode);
+            }
+
+            // Читаем ответ
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+
+                // Разбираем JSON
+                JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
+                this.accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();
+                this.expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
+            }
+        } finally {
+            http.disconnect();
         }
-
-        JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
-        this.accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();
-        this.expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
-
-        http.disconnect();
     }
 }
