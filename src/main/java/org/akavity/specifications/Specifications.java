@@ -14,7 +14,7 @@ public class Specifications {
     public static RequestSpecification requestSpecification(String url) {
         return new RequestSpecBuilder()
                 .setBaseUri(url)
-                .setContentType(ContentType.JSON)  //.setContentType("application/json")
+                .setContentType(ContentType.JSON)
                 .build();
     }
 
