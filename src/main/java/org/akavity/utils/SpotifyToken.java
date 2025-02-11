@@ -1,5 +1,6 @@
 package org.akavity.utils;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
@@ -29,15 +30,15 @@ public class SpotifyToken {
         stream.write(out);
 
         BufferedReader Lines = new BufferedReader(new InputStreamReader(http.getInputStream()));
-        String currentLine = Lines.readLine();
         StringBuilder response = new StringBuilder();
-        while (currentLine != null) {
-            response.append(currentLine).append("\n");
-            currentLine = Lines.readLine();
+        String currentLine;
+        while ((currentLine = Lines.readLine()) != null) {
+            response.append(currentLine);
         }
 
-        this.accessToken = String.valueOf(JsonParser.parseString(String.valueOf(response)).getAsJsonObject().getAsJsonPrimitive("access_token"));
-        this.expiresIn = String.valueOf(JsonParser.parseString(String.valueOf(response)).getAsJsonObject().getAsJsonPrimitive("expires_in"));
+        JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
+        this.accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();
+        this.expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
 
         http.disconnect();
     }
