@@ -65,7 +65,7 @@ public class SpotifyToken {
         }
     }
 
-    public Header getAccessTokenHeader() {
+    public Header getAuthHeader() {
         return new Header("Authorization", "Bearer " + getAccessToken());
     }
 
