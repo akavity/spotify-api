@@ -3,8 +3,11 @@ package org.akavity;
 import io.restassured.http.Header;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.akavity.annotations.TestData;
 import org.akavity.enums.PathEnum;
+import org.akavity.models.ArtistData;
 import org.akavity.specifications.Specifications;
+import org.akavity.utils.JsonReader;
 import org.akavity.utils.SpotifyToken;
 import org.akavity.utils.Utils;
 import org.testng.Assert;
@@ -24,20 +27,21 @@ public class SpTest {
     private final String URL = bundle.getString("URL");
     Specifications specifications;
 
-    @Test
-    public void getArtist() {
-        specifications = new Specifications(URL, 200);
+    @TestData(jsonFile = "artistData", model = "ArtistData")
+    @Test(description = "API get Artist", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    public void getArtist(ArtistData artist) {
+        specifications = new Specifications(URL, artist.getStatusCode());
         Response response = given()
                 .header(header)
                 .when()
-                .get("v1/artists/4Z8W4fKeB5YxbusRsdQVPb")
+                .get(artist.getResponse())
                 .then().log().all()
                 .extract().response();
 
         JsonPath jsonPath = response.jsonPath();
-        String name = jsonPath.get("name");
+        String actualName = jsonPath.get(PathEnum.ARTISTS.getPath());
 
-        Assert.assertEquals(name, "Radiohead");
+        Assert.assertEquals(actualName, artist.getExpectedName());
     }
 
     @Test

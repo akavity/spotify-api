@@ -1,0 +1,7 @@
+[
+  {
+    "statusCode": 200,
+    "response": "v1/artists/4Z8W4fKeB5YxbusRsdQVPb",
+    "expectedName": "Radiohead"
+  }
+]
