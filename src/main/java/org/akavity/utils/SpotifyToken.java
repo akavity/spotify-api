@@ -36,13 +36,13 @@ public class SpotifyToken {
                 stream.write(out);
             }
 
-            // Проверяем HTTP-код ответа
+            // Checking the HTTP response code
             int statusCode = http.getResponseCode();
             if (statusCode != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("Ошибка HTTP-запроса: " + statusCode);
+                throw new RuntimeException("HTTP request error: " + statusCode);
             }
 
-            // Читаем ответ
+            // Read the answer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
                 String line;
@@ -50,14 +50,13 @@ public class SpotifyToken {
                     response.append(line);
                 }
 
-                // Разбираем JSON
+                // Parsing JSON Разбираем JSON
                 JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
                 accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();
                 expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
             }
         } catch (IOException e) {
-            System.err.println("Ошибка при выполнении HTTP-запроса: " + e.getMessage());
-            //e.printStackTrace(); // Можно убрать в продакшене или заменить на логгер
+            System.err.println("Error while executing HTTP request: " + e.getMessage());
         } finally {
             if (http != null) {
                 http.disconnect();
