@@ -5,6 +5,9 @@
             <class name="org.akavity.SpTest">
                 <methods>
                     <include name="getArtist"/>
+                    <include name="getTopTracks"/>
+                    <include name="getAlbum"/>
+                    <include name="getAlbumTracks"/>
                 </methods>
             </class>
         </classes>

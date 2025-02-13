@@ -5,7 +5,10 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.akavity.annotations.TestData;
 import org.akavity.enums.PathEnum;
+import org.akavity.models.AlbumData;
+import org.akavity.models.AlbumTracksData;
 import org.akavity.models.ArtistData;
+import org.akavity.models.TopTracksData;
 import org.akavity.specifications.Specifications;
 import org.akavity.utils.JsonReader;
 import org.akavity.utils.SpotifyToken;
@@ -28,7 +31,7 @@ public class SpTest {
     Specifications specifications;
 
     @TestData(jsonFile = "artistData", model = "ArtistData")
-    @Test(description = "API get Artist", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    @Test(description = "API GET Artist", dataProviderClass = JsonReader.class, dataProvider = "getData")
     public void getArtist(ArtistData artist) {
         specifications = new Specifications(URL, artist.getStatusCode());
         Response response = given()
@@ -44,67 +47,57 @@ public class SpTest {
         Assert.assertEquals(actualName, artist.getExpectedName());
     }
 
-    @Test
-    public void getTopTracks() {
-        specifications = new Specifications(URL, 200);
+    @TestData(jsonFile = "topTracksData", model = "TopTracksData")
+    @Test(description = "API GET Top Tracks", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    public void getTopTracks(TopTracksData topTracks) {
+        specifications = new Specifications(URL, topTracks.getStatusCode());
         Response response = given()
                 .header(header)
                 .when()
-                .get("v1/artists/0TnOYISbd1XYRBk9myaseg/top-tracks")
+                .get(topTracks.getResponse())
                 .then().log().all()
                 .extract().response();
 
         JsonPath jsonPath = response.jsonPath();
         List<String> actualTracks = utils.extractTracks(jsonPath, PathEnum.TOP_TRACKS);
-        List<String> expectedTracks = new ArrayList<>(List.of("Give Me Everything",
-                "Timber",
-                "DJ Got Us Fallin' In Love",
-                "Time of Our Lives",
-                "International Love",
-                "Hotel Room Service",
-                "Feel This Moment",
-                "Fireball",
-                "Hey Baby",
-                "I Know You Want Me"));
+        List<String> expectedTracks = new ArrayList<>(topTracks.getListOfTracks());
 
         Assert.assertTrue(actualTracks.containsAll(expectedTracks));
     }
 
-    @Test
-    public void getAlbum() {
-        specifications = new Specifications(URL, 200);
+    @TestData(jsonFile = "albumData", model = "AlbumData")
+    @Test(description = "API GET Album", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    public void getAlbum(AlbumData album) {
+        specifications = new Specifications(URL, album.getStatusCode());
         Response response = given()
                 .header(header)
                 .when()
-                .get("v1/albums/4aawyAB9vmqN3uQ7FjRGTy")
+                .get(album.getResponse())
                 .then().log().all()
                 .extract().response();
 
         JsonPath jsonPath = response.jsonPath();
-        String type = jsonPath.get("album_type");
-        int totalTracks = jsonPath.get("total_tracks");
+        String type = jsonPath.get(PathEnum.ALBUM_TYPE.getPath());
+        int totalTracks = jsonPath.get(PathEnum.ALBUM_TOTAL_TRACKS.getPath());
 
-        Assert.assertEquals(type, "album");
-        Assert.assertEquals(totalTracks, 18);
+        Assert.assertEquals(type, album.getType());
+        Assert.assertEquals(totalTracks, album.getTotalTracks());
     }
 
-    @Test
-    public void getAlbumTracks() {
-        specifications = new Specifications(URL, 200);
+    @TestData(jsonFile = "albumTracksData", model = "AlbumTracksData")
+    @Test(description = "API GET Album Tracks", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    public void getAlbumTracks(AlbumTracksData album) {
+        specifications = new Specifications(URL, album.getStatusCode());
         Response response = given()
                 .header(header)
                 .when()
-                .get("v1/albums/4aawyAB9vmqN3uQ7FjRGTy/tracks ")
+                .get(album.getResponse())
                 .then().log().all()
                 .extract().response();
 
         JsonPath jsonPath = response.jsonPath();
         List<String> actualAlbumTracks = utils.extractTracks(jsonPath, PathEnum.ALBUMS_TRACKS);
-        List<String> expectedAlbumTracks = new ArrayList<>(List.of("Global Warming",
-                "Don't Stop the Party", "Feel This Moment", "Back in Time",
-                "Hope We Meet Again", "Party Ain't Over", "Drinks for You", "Have Some Fun", "Outta Nowhere",
-                "Tchu Tchu Tcha", "Last Night", "I'm Off That", "Echa Pa'lla", "Everybody Fucks", "Get It Started",
-                "11:59", "Rain Over Me", "International Love"));
+        List<String> expectedAlbumTracks = new ArrayList<>(album.getListOfTracks());
 
         Assert.assertTrue(actualAlbumTracks.containsAll(expectedAlbumTracks));
     }

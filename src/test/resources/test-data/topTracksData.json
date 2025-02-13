@@ -1,0 +1,18 @@
+[
+  {
+    "statusCode": 200,
+    "response": "v1/artists/0TnOYISbd1XYRBk9myaseg/top-tracks",
+    "listOfTracks": [
+      "give me everything",
+      "timber",
+      "dj got us fallin' in love",
+      "time of our lives",
+      "international love",
+      "hotel room service",
+      "feel this moment",
+      "fireball",
+      "hey baby",
+      "i know you want me"
+    ]
+  }
+]

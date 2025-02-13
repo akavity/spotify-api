@@ -11,7 +11,7 @@ public class Utils {
     public List<String> extractTracks(JsonPath jsonPath, PathEnum pathEnum) {
         return jsonPath.getList(pathEnum.getPath(), String.class)
                 .stream()
-                .map(x -> extractText(x, "^[^(-]+"))
+                .map(x -> extractText(x, "^[^(-]+").toLowerCase())
                 .toList();
     }
 

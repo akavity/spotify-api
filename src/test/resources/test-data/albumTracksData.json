@@ -1,0 +1,26 @@
+[
+  {
+    "statusCode": 200,
+    "response": "v1/albums/4aawyAB9vmqN3uQ7FjRGTy/tracks",
+    "listOfTracks": [
+      "global warming",
+      "don't stop the party",
+      "feel this moment",
+      "back in time",
+      "hope we meet again",
+      "party ain't over",
+      "drinks for you",
+      "have some fun",
+      "outta nowhere",
+      "tchu tchu tcha",
+      "last night",
+      "i'm off that",
+      "echa pa'lla",
+      "everybody fucks",
+      "get it started",
+      "11:59",
+      "rain over me",
+      "international love"
+    ]
+  }
+]
