@@ -4,5 +4,11 @@
     "response": "v1/albums/4aawyAB9vmqN3uQ7FjRGTy",
     "type": "album",
     "totalTracks": 18
+  },
+  {
+    "statusCode": 400,
+    "response": "v1/albums/4aawyAB9vmqN3uQ7FjRGTytt",
+    "errorStatus": 400,
+    "errorMessage": "invalid base62 id"
   }
 ]

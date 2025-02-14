@@ -13,4 +13,6 @@ public class AlbumData {
     String expectedName;
     String type;
     int totalTracks;
+    int errorStatus;
+    String errorMessage;
 }

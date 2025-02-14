@@ -77,11 +77,19 @@ public class SpTest {
                 .extract().response();
 
         JsonPath jsonPath = response.jsonPath();
-        String type = jsonPath.get(PathEnum.ALBUM_TYPE.getPath());
-        int totalTracks = jsonPath.get(PathEnum.ALBUM_TOTAL_TRACKS.getPath());
+        if (album.getStatusCode() == 200) {
+            String type = jsonPath.get(PathEnum.ALBUM_TYPE.getPath());
+            int totalTracks = jsonPath.get(PathEnum.ALBUM_TOTAL_TRACKS.getPath());
 
-        Assert.assertEquals(type, album.getType());
-        Assert.assertEquals(totalTracks, album.getTotalTracks());
+            Assert.assertEquals(type, album.getType());
+            Assert.assertEquals(totalTracks, album.getTotalTracks());
+        } else {
+            int status = jsonPath.get(PathEnum.ERROR_STATUS.getPath());
+            String error = jsonPath.get(PathEnum.ERROR_MESSAGE.getPath());
+
+            Assert.assertEquals(status, album.getErrorStatus());
+            Assert.assertTrue(error.toLowerCase().contains(album.getErrorMessage()));
+        }
     }
 
     @TestData(jsonFile = "albumTracksData", model = "AlbumTracksData")
