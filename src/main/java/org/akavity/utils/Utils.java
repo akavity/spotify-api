@@ -15,12 +15,17 @@ public class Utils {
                 .toList();
     }
 
+    public String extractCodeFromURL(String url) {
+        return extractText(url, "[?&]code=([^&]+)")
+                .replace("?code=", "");
+    }
+
     private String extractText(String text, String regex) {
         String result = "";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            result = (matcher.group().trim());
+            result = (matcher.group().trim());  // matcher.group(1) extractCodeFromURL
         }
         return result;
     }

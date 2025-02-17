@@ -2,7 +2,6 @@ package org.akavity.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.restassured.http.Header;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,15 +11,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class SpotifyToken {
+public class ClientToken {
     private String accessToken = "";
     private String expiresIn = "";
 
-    public SpotifyToken() {
-        get();
+    public ClientToken() {
+        getToken();
     }
 
-    private void get() {
+    private void getToken() {
         HttpURLConnection http = null;
         try {
             URL url = new URL(Endpoints.TOKEN);
@@ -36,13 +35,13 @@ public class SpotifyToken {
                 stream.write(out);
             }
 
-            // Checking the HTTP response code
+            // Checking the HTTP response code Проверяем HTTP-код ответа
             int statusCode = http.getResponseCode();
             if (statusCode != HttpURLConnection.HTTP_OK) {
-                throw new RuntimeException("HTTP request error: " + statusCode);
+                throw new RuntimeException("HTTP request error Ошибка HTTP-запроса: " + statusCode);
             }
 
-            // Read the answer
+            // Read the answer Читаем ответ
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
                 String line;
@@ -56,16 +55,13 @@ public class SpotifyToken {
                 expiresIn = jsonResponse.getAsJsonPrimitive("expires_in").getAsString();
             }
         } catch (IOException e) {
-            System.err.println("Error while executing HTTP request: " + e.getMessage());
+            System.err.println("Error while executing HTTP request Ошибка при выполнении HTTP-запроса: " + e.getMessage());
+            //e.printStackTrace(); // Можно убрать в продакшене или заменить на логгер
         } finally {
             if (http != null) {
                 http.disconnect();
             }
         }
-    }
-
-    public Header getAuthHeader() {
-        return new Header("Authorization", "Bearer " + getAccessToken());
     }
 
     public String getAccessToken() {
