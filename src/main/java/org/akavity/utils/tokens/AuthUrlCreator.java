@@ -1,4 +1,4 @@
-package org.akavity.utils.authToken;
+package org.akavity.utils.tokens;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -9,8 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.akavity.utils.Endpoints.CLIENT_ID;
-import static org.akavity.utils.Endpoints.REDIRECT_URI;
+import static org.akavity.utils.tokens.Endpoints.CLIENT_ID;
+import static org.akavity.utils.tokens.Endpoints.REDIRECT_URI;
 
 public class AuthUrlCreator {
     private static final String POSSIBLE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -37,7 +37,7 @@ public class AuthUrlCreator {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(input);
     }
 
-    //Request User Authorization
+    // Request User Authorization
     public static String buildAuthUrl(String codeChallenge) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("response_type", "code");

@@ -1,4 +1,4 @@
-package org.akavity.utils;
+package org.akavity.utils.tokens;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -26,11 +26,13 @@ public abstract class TokenRequester {
                 stream.write(out);
             }
 
+            // Checking the HTTP response code
             int statusCode = http.getResponseCode();
             if (statusCode != HttpURLConnection.HTTP_OK) {
                 throw new RuntimeException("HTTP request error: " + statusCode);
             }
 
+            // Read the answer
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(http.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
                 String line;

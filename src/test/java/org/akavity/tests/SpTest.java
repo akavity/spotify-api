@@ -1,4 +1,4 @@
-package org.akavity;
+package org.akavity.tests;
 
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -9,7 +9,7 @@ import org.akavity.models.AlbumTracksData;
 import org.akavity.models.ArtistData;
 import org.akavity.models.TopTracksData;
 import org.akavity.specifications.Specifications;
-import org.akavity.utils.ClientToken;
+import org.akavity.utils.tokens.ClientToken;
 import org.akavity.utils.JsonReader;
 import org.akavity.utils.SpotifyHeaders;
 import org.akavity.utils.Utils;

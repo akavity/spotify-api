@@ -1,8 +1,6 @@
-package org.akavity.utils.authToken;
+package org.akavity.utils.tokens;
 
 import com.google.gson.JsonObject;
-import org.akavity.utils.Endpoints;
-import org.akavity.utils.TokenRequester;
 
 public class AuthToken extends TokenRequester {
     private String accessToken = "";
@@ -19,6 +17,7 @@ public class AuthToken extends TokenRequester {
                 "&redirect_uri=" + Endpoints.REDIRECT_URI +
                 "&code_verifier=" + codeVerifier;
 
+        // Parsing JSON
         JsonObject jsonResponse = requestToken(params);
         if (jsonResponse != null) {
             accessToken = jsonResponse.getAsJsonPrimitive("access_token").getAsString();

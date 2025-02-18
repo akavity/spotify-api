@@ -1,5 +1,7 @@
 package org.akavity.utils;
 
+import org.akavity.utils.tokens.ClientToken;
+
 import java.util.HashMap;
 import java.util.Map;
 
