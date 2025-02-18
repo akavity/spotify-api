@@ -2,7 +2,7 @@
 <suite name="APITest">
     <test name="FormTest" parallel="false">
         <classes>
-            <class name="org.akavity.tests.SpTest">
+            <class name="org.akavity.tests.ClientRespTest">
                 <methods>
                     <include name="getArtist"/>
                     <include name="getTopTracks"/>

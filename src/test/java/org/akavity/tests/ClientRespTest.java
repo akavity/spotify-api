@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 import static io.restassured.RestAssured.given;
 
-public class SpTest {
+public class ClientRespTest {
     Utils utils = new Utils();
     ClientToken clientToken = new ClientToken();
     SpotifyHeaders authHeader = new SpotifyHeaders(clientToken);

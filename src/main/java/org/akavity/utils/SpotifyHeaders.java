@@ -13,6 +13,11 @@ public class SpotifyHeaders {
         headers.put("Authorization", "Bearer " + token.getAccessToken());
     }
 
+    public SpotifyHeaders(String token) {
+        this.headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + token);
+    }
+
     public void addHeader(String key, String value) {
         headers.put(key, value);
     }
