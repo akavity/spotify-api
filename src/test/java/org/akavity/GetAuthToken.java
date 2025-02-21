@@ -6,9 +6,9 @@ import org.akavity.utils.tokens.AuthToken;
 public class GetAuthToken {
     public static void main(String[] args) {
         Utils utils = new Utils();
-        String authUrl = "";
+        String redirectUrl = "";
         String codeVerifier = "";
-        String code = utils.extractCodeFromURL(authUrl);
+        String code = utils.extractCodeFromURL(redirectUrl);
         System.out.println(code);
         AuthToken authToken = new AuthToken(code, codeVerifier);
         System.out.println("Access Token: " + authToken.getAccessToken());
