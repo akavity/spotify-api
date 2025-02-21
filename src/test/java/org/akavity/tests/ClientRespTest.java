@@ -1,6 +1,5 @@
-package org.akavity;
+package org.akavity.tests;
 
-import io.restassured.http.Header;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.akavity.annotations.TestData;
@@ -10,8 +9,9 @@ import org.akavity.models.AlbumTracksData;
 import org.akavity.models.ArtistData;
 import org.akavity.models.TopTracksData;
 import org.akavity.specifications.Specifications;
+import org.akavity.utils.tokens.ClientToken;
 import org.akavity.utils.JsonReader;
-import org.akavity.utils.SpotifyToken;
+import org.akavity.utils.SpotifyHeaders;
 import org.akavity.utils.Utils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -22,10 +22,11 @@ import java.util.ResourceBundle;
 
 import static io.restassured.RestAssured.given;
 
-public class SpTest {
+public class ClientRespTest {
     Utils utils = new Utils();
-    SpotifyToken spotifyToken = new SpotifyToken();
-    Header header = spotifyToken.getAuthHeader();
+    ClientToken clientToken = new ClientToken();
+    SpotifyHeaders authHeader = new SpotifyHeaders(clientToken);
+    SpotifyHeaders createHeader = new SpotifyHeaders(clientToken);
     private final ResourceBundle bundle = ResourceBundle.getBundle("config");
     private final String URL = bundle.getString("URL");
     Specifications specifications;
@@ -35,7 +36,7 @@ public class SpTest {
     public void getArtist(ArtistData artist) {
         specifications = new Specifications(URL, artist.getStatusCode());
         Response response = given()
-                .header(header)
+                .headers(authHeader.getHeaders())
                 .when()
                 .get(artist.getResponse())
                 .then().log().all()
@@ -52,7 +53,7 @@ public class SpTest {
     public void getTopTracks(TopTracksData topTracks) {
         specifications = new Specifications(URL, topTracks.getStatusCode());
         Response response = given()
-                .header(header)
+                .headers(authHeader.getHeaders())
                 .when()
                 .get(topTracks.getResponse())
                 .then().log().all()
@@ -70,7 +71,7 @@ public class SpTest {
     public void getAlbum(AlbumData album) {
         specifications = new Specifications(URL, album.getStatusCode());
         Response response = given()
-                .header(header)
+                .headers(authHeader.getHeaders())
                 .when()
                 .get(album.getResponse())
                 .then().log().all()
@@ -97,7 +98,7 @@ public class SpTest {
     public void getAlbumTracks(AlbumTracksData album) {
         specifications = new Specifications(URL, album.getStatusCode());
         Response response = given()
-                .header(header)
+                .headers(authHeader.getHeaders())
                 .when()
                 .get(album.getResponse())
                 .then().log().all()
