@@ -13,14 +13,25 @@ import static org.akavity.utils.tokens.Endpoints.CLIENT_ID;
 import static org.akavity.utils.tokens.Endpoints.REDIRECT_URI;
 
 public class AuthUrlCreator {
-    private static final String POSSIBLE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final SecureRandom RANDOM = new SecureRandom();
-    private static final String SCOPE = "user-read-private user-read-email";
+    private final String POSSIBLE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private final SecureRandom RANDOM;
+    private final String SCOPE;
+    private final String CODE_VERIFIER;
+    private final String AUTH_URL;
+
+    public AuthUrlCreator(String scope) {
+        this.SCOPE = scope;
+        RANDOM = new SecureRandom();
+        CODE_VERIFIER = generateRandomString(64);
+        byte[] hashed = sha256(CODE_VERIFIER);
+        String codeChallenge = base64UrlEncode(hashed);
+        AUTH_URL = buildAuthUrl(codeChallenge);
+    }
 
     // Code Verifier
-    public static String generateRandomString(int length) {
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
+    private String generateRandomString(int RANDOM_LENGTH) {
+        StringBuilder sb = new StringBuilder(RANDOM_LENGTH);
+        for (int i = 0; i < RANDOM_LENGTH; i++) {
             int randomIndex = RANDOM.nextInt(POSSIBLE_CHARACTERS.length());
             sb.append(POSSIBLE_CHARACTERS.charAt(randomIndex));
         }
@@ -28,17 +39,22 @@ public class AuthUrlCreator {
     }
 
     // Code Challenge
-    public static byte[] sha256(String plain) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    private byte[] sha256(String plain) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         return digest.digest(plain.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String base64UrlEncode(byte[] input) {
+    private String base64UrlEncode(byte[] input) {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(input);
     }
 
     // Request User Authorization
-    public static String buildAuthUrl(String codeChallenge) {
+    private String buildAuthUrl(String codeChallenge) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("response_type", "code");
         params.put("client_id", CLIENT_ID);
@@ -52,5 +68,13 @@ public class AuthUrlCreator {
                 .collect(Collectors.joining("&"));
 
         return "https://accounts.spotify.com/authorize?" + queryParams;
+    }
+
+    public String getAUTH_URL() {
+        return AUTH_URL;
+    }
+
+    public String getCODE_VERIFIER() {
+        return CODE_VERIFIER;
     }
 }
