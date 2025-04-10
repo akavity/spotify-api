@@ -15,7 +15,7 @@ public class AuthRespTest {
     private final String URL = bundle.getString("URL");
     Specifications specifications;
 
-    @Test
+    @Test(description = "Start a new context or resume current playback")
     public void playTrack() {
         specifications = new Specifications(URL, 200);
         given()
@@ -26,7 +26,7 @@ public class AuthRespTest {
                 .extract().response();
     }
 
-    @Test
+    @Test(description = "Pause playback on the user's account")
     public void pauseTrack() {
         specifications = new Specifications(URL, 200);
         given()
@@ -37,7 +37,7 @@ public class AuthRespTest {
                 .extract().response();
     }
 
-    @Test
+    @Test(description = "Skips to next track")
     public void skipToNextTrack() {
         specifications = new Specifications(URL, 200);
         given()
@@ -48,7 +48,7 @@ public class AuthRespTest {
                 .extract().response();
     }
 
-    @Test
+    @Test(description = "Skips to previous track in the user’s queue")
     public void skipToPreviousTrack() {
         specifications = new Specifications(URL, 200);
         given()
@@ -59,13 +59,24 @@ public class AuthRespTest {
                 .extract().response();
     }
 
-    @Test
+    @Test(description = "Set the volume for the user’s current playback device")
     public void setPlaybackVolumeTrack() {
         specifications = new Specifications(URL, 204);
         given()
                 .headers(createHeader.getHeaders())
                 .when()
                 .put("v1/me/player/volume?volume_percent=50")
+                .then().log().all()
+                .extract().response();
+    }
+
+    @Test(description = "Toggle shuffle on or off for user’s playback")
+    public void togglePlaybackShuffle() {
+        specifications = new Specifications(URL, 200);
+        given()
+                .headers(createHeader.getHeaders())
+                .when()
+                .put("v1/me/player/shuffle?state=true")
                 .then().log().all()
                 .extract().response();
     }
