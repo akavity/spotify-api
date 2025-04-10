@@ -26,13 +26,12 @@ public class ClientRespTest {
     Utils utils = new Utils();
     ClientToken clientToken = new ClientToken();
     SpotifyHeaders authHeader = new SpotifyHeaders(clientToken);
-    SpotifyHeaders createHeader = new SpotifyHeaders(clientToken);
     private final ResourceBundle bundle = ResourceBundle.getBundle("config");
     private final String URL = bundle.getString("URL");
     Specifications specifications;
 
     @TestData(jsonFile = "artistData", model = "ArtistData")
-    @Test(description = "API GET Artist", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    @Test(description = "Get Spotify catalog information for a single artist", dataProviderClass = JsonReader.class, dataProvider = "getData")
     public void getArtist(ArtistData artist) {
         specifications = new Specifications(URL, artist.getStatusCode());
         Response response = given()
@@ -49,7 +48,7 @@ public class ClientRespTest {
     }
 
     @TestData(jsonFile = "topTracksData", model = "TopTracksData")
-    @Test(description = "API GET Top Tracks", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    @Test(description = "Get Spotify catalog information about an artist's top track", dataProviderClass = JsonReader.class, dataProvider = "getData")
     public void getTopTracks(TopTracksData topTracks) {
         specifications = new Specifications(URL, topTracks.getStatusCode());
         Response response = given()
@@ -67,7 +66,7 @@ public class ClientRespTest {
     }
 
     @TestData(jsonFile = "albumData", model = "AlbumData")
-    @Test(description = "API GET Album", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    @Test(description = "Get Spotify catalog information for a single album", dataProviderClass = JsonReader.class, dataProvider = "getData")
     public void getAlbum(AlbumData album) {
         specifications = new Specifications(URL, album.getStatusCode());
         Response response = given()
@@ -94,7 +93,7 @@ public class ClientRespTest {
     }
 
     @TestData(jsonFile = "albumTracksData", model = "AlbumTracksData")
-    @Test(description = "API GET Album Tracks", dataProviderClass = JsonReader.class, dataProvider = "getData")
+    @Test(description = "Get Spotify catalog information about an album’s tracks.", dataProviderClass = JsonReader.class, dataProvider = "getData")
     public void getAlbumTracks(AlbumTracksData album) {
         specifications = new Specifications(URL, album.getStatusCode());
         Response response = given()
