@@ -26,6 +26,7 @@ public class ClientRespTest {
     Utils utils = new Utils();
     ClientToken clientToken = new ClientToken();
     SpotifyHeaders authHeader = new SpotifyHeaders(clientToken);
+    SpotifyHeaders createHeader = new SpotifyHeaders(clientToken);
     private final ResourceBundle bundle = ResourceBundle.getBundle("config");
     private final String URL = bundle.getString("URL");
     Specifications specifications;
